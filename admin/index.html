@@ -1,441 +1,848 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Marginal News | Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marginal News | Voices Beyond the Headlines</title>
+<meta name="description" content="Marginal News — independent journalism, Bangladesh news and global perspectives.">
+<meta name="theme-color" content="#101010">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon-192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&family=Roboto+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+
 <style>
-:root{--red:#c4161c;--dark:#171717;--bg:#f4f4f4;--line:#ddd}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:#222;font:15px Arial,sans-serif}
-header{background:var(--dark);color:white;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-header strong{font-size:22px}
-main{max-width:1100px;margin:28px auto;padding:0 15px}
-.panel{background:white;border:1px solid var(--line);border-radius:10px;padding:22px;margin-bottom:20px}
-h2{margin-top:0}
-label{display:block;font-weight:bold;margin:14px 0 6px}
-input,textarea,select{width:100%;padding:11px;border:1px solid #bbb;border-radius:5px;font:inherit}
-textarea{min-height:150px;resize:vertical}
-input[type=checkbox]{width:auto}
-button{border:0;border-radius:5px;padding:11px 16px;background:var(--red);color:white;font-weight:bold;cursor:pointer}
-button.secondary{background:#333}
-button.danger{background:#777}
-button:disabled{opacity:.5}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.story{border-top:1px solid var(--line);padding:16px 0;display:flex;justify-content:space-between;gap:15px;align-items:center}
-.story h3{margin:0 0 7px}
-.meta{color:#777;font-size:13px}
-.hidden{display:none!important}
-#login{max-width:430px;margin:65px auto}
-#loginMessage,#message{margin-top:12px;color:#b21b20}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.stat{background:white;border:1px solid var(--line);padding:16px;border-radius:8px}
-.stat strong{display:block;font-size:25px;color:var(--red);margin-top:7px}
-@media(max-width:650px){.row,.stats{grid-template-columns:1fr 1fr}.story{align-items:flex-start;flex-direction:column}}
+:root {
+  --red: #d21f2b;
+  --bg: #101010;
+  --panel: #191919;
+  --ink: #f5f3ef;
+  --muted: #aaa;
+  --line: #343434;
+  --sans: 'DM Sans', Arial, sans-serif;
+  --serif: 'Playfair Display', Georgia, serif;
+  --cond: 'Roboto Condensed', Arial, sans-serif;
+  --max: 1200px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.55 var(--sans);
+}
+
+body.light {
+  color-scheme: light;
+  --bg: #f4f1eb;
+  --panel: #fff;
+  --ink: #171717;
+  --muted: #666;
+  --line: #ded9d0;
+}
+
+a { color: inherit; text-decoration: none; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.wrap {
+  width: min(var(--max), calc(100% - 32px));
+  margin: auto;
+}
+
+.top {
+  background: #080808;
+  color: #bbb;
+  font-size: 11px;
+  padding: 6px 0;
+}
+
+.top .wrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.top a { margin-left: 15px; }
+
+header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.mast {
+  min-height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand img {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+}
+
+.brand strong {
+  font: 800 clamp(27px, 4vw, 43px)/.95 var(--cond);
+  white-space: nowrap;
+}
+
+.brand strong span { color: var(--red); }
+
+.tag {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.map {
+  width: 190px;
+  height: 82px;
+  opacity: .55;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.ib {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 20px;
+}
+
+nav {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  background: var(--panel);
+  scrollbar-width: none;
+}
+
+nav a {
+  padding: 12px 13px;
+  border-bottom: 3px solid transparent;
+  font: 700 14px var(--cond);
+  text-transform: uppercase;
+}
+
+nav a:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.breaking {
+  display: none;
+  background: var(--red);
+  color: #fff;
+  padding: 9px 0;
+}
+
+.breaking.show { display: block; }
+
+.breaking b {
+  background: #080808;
+  padding: 9px 13px;
+  margin-right: 14px;
+}
+
+.ticker {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.hero { padding: 22px 0; }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+}
+
+.lead {
+  min-height: 410px;
+  position: relative;
+  background: #292929;
+  display: flex;
+  align-items: end;
+  overflow: hidden;
+}
+
+.lead img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  inset: 0;
+  opacity: .65;
+}
+
+.lead:after {
+  content: "";
+  position: absolute;
+  inset: 25% 0 0;
+  background: linear-gradient(transparent, #000e);
+}
+
+.lead-copy {
+  position: relative;
+  z-index: 1;
+  padding: 25px;
+  color: white;
+}
+
+.kicker {
+  font: 800 11px var(--cond);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ef454d;
+}
+
+.lead h1 {
+  font: 800 clamp(28px, 4vw, 48px)/1.1 var(--serif);
+  margin: 8px 0;
+}
+
+.lead p { color: #ddd; }
+
+.meta {
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lead .meta { color: #ddd; }
+
+.read {
+  display: inline-block;
+  background: var(--red);
+  color: white;
+  padding: 8px 13px;
+  margin-top: 10px;
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.side { display: grid; gap: 10px; }
+
+.sidecard {
+  display: grid;
+  grid-template-columns: 105px 1fr;
+  gap: 10px;
+  padding: 9px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.sidecard img {
+  width: 105px;
+  height: 100%;
+  min-height: 85px;
+  object-fit: cover;
+}
+
+.sidecard h3 {
+  font: 700 15px/1.25 var(--serif);
+  margin: 5px 0;
+}
+
+.section { padding: 20px 0 30px; }
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 9px;
+  margin-bottom: 15px;
+}
+
+.head h2 {
+  font: 800 24px var(--cond);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.red { color: var(--red); }
+
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.highlight img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  background: var(--panel);
+  display: block;
+}
+
+.highlight h3 {
+  font: 700 21px/1.2 var(--serif);
+  margin: 9px 0;
+}
+
+.highlight .meta {
+  border-left: 3px solid var(--red);
+  padding-left: 9px;
+}
+
+.quick {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  margin: 5px auto 25px;
+  border: 1px solid var(--line);
+}
+
+.quick a {
+  background: var(--panel);
+  padding: 12px;
+}
+
+.quick b {
+  display: block;
+  font: 800 17px var(--cond);
+  text-transform: uppercase;
+}
+
+.quick small { color: var(--muted); }
+
+.content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 285px;
+  gap: 25px;
+}
+
+.filters {
+  display: flex;
+  gap: 7px;
+  overflow: auto;
+  margin-bottom: 15px;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  padding: 7px 11px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.chip.active, .chip:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: white;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  min-width: 0;
+}
+
+.card img {
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  display: block;
+  background: var(--panel);
+}
+
+.cardbody { padding: 11px; }
+
+.card h3 {
+  font: 700 16px/1.25 var(--serif);
+  margin: 6px 0;
+}
+
+.card p {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.empty {
+  grid-column: 1/-1;
+  text-align: center;
+  border: 1px dashed var(--line);
+  padding: 30px 15px;
+  color: var(--muted);
+  background: var(--panel);
+}
+
+.asidebox {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 14px;
+  margin-bottom: 15px;
+}
+
+.asidebox h3 {
+  font: 800 19px var(--cond);
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--red);
+  padding-bottom: 7px;
+  margin: 0 0 10px;
+}
+
+.rank {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  counter-reset: n;
+}
+
+.rank li {
+  counter-increment: n;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  font: 700 13px var(--serif);
+}
+
+.rank li:before {
+  content: counter(n, decimal-leading-zero);
+  color: var(--red);
+  font: 800 17px var(--cond);
+  margin-right: 9px;
+}
+
+.newsletter {
+  background: #1b1b1b;
+  color: white;
+  padding: 15px;
+}
+
+.newsletter input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+}
+
+.newsletter button {
+  width: 100%;
+  padding: 10px;
+  background: var(--red);
+  border: 0;
+  color: white;
+  font-weight: 800;
+}@media(max-width:850px) {
+  .map { width:130px; }
+  .content { grid-template-columns:1fr; }
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .hero-grid { grid-template-columns:1fr; }
+  .side { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media(max-width:600px) {
+  .wrap { width:calc(100% - 22px); }
+  .top { font-size:9px; }
+  .mast { min-height:78px; }
+  .brand img { width:48px;height:48px; }
+  .brand strong { font-size:25px; }
+  .tag { font-size:7px;letter-spacing:1px; }
+  .map { display:none; }
+  .ib { width:34px;height:34px;font-size:16px; }
+  nav a { padding:11px 10px;font-size:12px; }
+  .lead { min-height:330px; }
+  .lead-copy { padding:17px; }
+  .lead h1 { font-size:30px; }
+  .side { grid-template-columns:1fr; }
+  .highlights { grid-template-columns:1fr; }
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr));gap:9px; }
+  .card h3 { font-size:14px; }
+  .cardbody { padding:8px; }
+  .quick { grid-template-columns:repeat(2,1fr); }
+  .head h2 { font-size:21px; }
+}
+
+@media(max-width:360px) {
+  .brand strong { font-size:21px; }
+  .grid { grid-template-columns:1fr; }
+}
+
+footer {
+  background:#080808;
+  color:#eee;
+  margin-top:30px;
+  padding:35px 0 15px;
+}
+
+.footergrid {
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:25px;
+}
+
+footer h3 {
+  font:800 19px var(--cond);
+  color:white;
+}
+
+footer p, footer a {
+  color:#aaa;
+  font-size:12px;
+}
+
+footer a { display:block;margin:8px 0; }
+
+.copyright {
+  border-top:1px solid #333;
+  margin-top:25px;
+  padding-top:15px;
+  text-align:center;
+  color:#888;
+  font-size:11px;
+}
+
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:#000e;
+  overflow:auto;
+  padding:20px;
+}
+
+.modal.show { display:block; }
+
+.modalbox {
+  max-width:800px;
+  margin:30px auto;
+  background:var(--bg);
+  color:var(--ink);
+  padding:22px;
+  border:1px solid var(--line);
+  position:relative;
+}
+
+.modalbox img {
+  width:100%;
+  max-height:420px;
+  object-fit:cover;
+}
+
+.modalbox h2 {
+  font:800 30px/1.2 var(--serif);
+}
+
+.modaltext {
+  white-space:pre-line;
+  line-height:1.8;
+}
+
+.closemodal {
+  position:absolute;
+  right:12px;
+  top:10px;
+  background:var(--red);
+  color:white;
+  border:0;
+  padding:8px 13px;
+}
+
+@media(max-width:600px) {
+  .footergrid { grid-template-columns:1fr; }
+  .modalbox { padding:15px; }
+  .modalbox h2 { font-size:23px; }
+}
 </style>
 </head>
+
 <body>
 
+<div class="top">
+  <div class="wrap">
+    <span id="todayDate">Marginal News</span>
+    <span>
+      <a href="https://www.facebook.com/marginalnews" target="_blank" rel="noopener">Facebook</a>
+      <a href="/admin/">Admin</a>
+    </span>
+  </div>
+</div>
+
 <header>
-  <div>
-    <strong>MARGINAL NEWS</strong><br>
-    <span>Newsroom Management System</span>
+  <div class="wrap mast">
+    <a class="brand" href="/">
+      <img
+        src="/marginal-news-logo-original.png"
+        alt="Marginal News Logo"
+        onerror="this.onerror=null;this.src='/icon-192.png';"
+      >
+      <div>
+        <strong><span>MARGINAL</span> NEWS</strong>
+        <div class="tag">Voices Beyond the Headlines</div>
+      </div>
+    </a>
+
+    <svg class="map" viewBox="0 0 500 210" role="img" aria-label="World map illustration">
+      <g fill="#999" opacity=".75">
+        <path d="M36 55l25-18 37 4 17 17 36-7 24 19-13 22-33 3-15 23-30-7-13-24-27-7z"/>
+        <path d="M128 119l24 7 15 28-11 32-15 15-12-32-15-22z"/>
+        <path d="M205 48l29-17 35 8 19-12 35 9 22-7 33 17-5 17-33 4-16 19-37-8-20 18-25-7-17-20-28 1z"/>
+        <path d="M249 105l28-10 34 12 10 29-18 29-13 30-17-8-11-37-19-19z"/>
+        <path d="M347 122l27-13 34 9 26 22-15 18-31-3-19 15-25-18z"/>
+        <path d="M410 170l20-5 15 12-16 10-20-5z"/>
+        <path d="M180 30l12-8 13 7-8 12z"/>
+      </g>
+      <g fill="none" stroke="#777" stroke-width="1" stroke-dasharray="2 5">
+        <path d="M10 105H490M250 5V205"/>
+      </g>
+    </svg>
+
+    <div class="actions">
+      <button class="ib" id="searchBtn" aria-label="Search">⌕</button>
+      <button class="ib" id="themeBtn" aria-label="Change theme">◐</button>
+      <button class="ib" id="menuBtn" aria-label="Menu">☰</button>
+    </div>
   </div>
-  <div id="headerActions" class="hidden actions">
-    <button class="secondary" id="download">Download Subscribers</button>
-    <button class="secondary" id="logout">Log out</button>
+
+  <div class="wrap" id="searchArea" hidden>
+    <input id="searchInput" type="search" placeholder="Search news..." style="width:100%;padding:12px;margin:0 0 12px;background:var(--panel);color:var(--ink);border:1px solid var(--line)">
   </div>
+
+  <nav class="wrap" id="mainNav">
+    <a href="#latest">Latest</a>
+    <a href="#bangladesh">Bangladesh</a>
+    <a href="#world">World</a>
+    <a href="#politics">Politics</a>
+    <a href="#business">Business</a>
+    <a href="#technology">Technology</a>
+    <a href="#education">Education</a>
+    <a href="#environment">Environment</a>
+    <a href="#opinion">Opinion</a>
+  </nav>
 </header>
 
-<main>
-  <section id="login" class="panel">
-    <h2>Admin Login</h2>
-    <p class="meta">Sign in to manage Marginal News.</p>
-    <label for="password">Admin Password</label>
-    <input id="password" type="password" placeholder="Enter admin password">
-    <div class="actions">
-      <button id="loginBtn">Sign in</button>
-    </div>
-    <p id="loginMessage" aria-live="polite"></p>
-  </section>
-
-  <section id="dashboard" class="hidden">
-
-    <div class="stats">
-      <div class="stat">Total Stories<strong id="totalStories">0</strong></div>
-      <div class="stat">Published<strong id="publishedStories">0</strong></div>
-      <div class="stat">Drafts<strong id="draftStories">0</strong></div>
-      <div class="stat">Scheduled<strong id="scheduledStories">0</strong></div>
-    </div>
-
-    <div class="panel">
-      <h2 id="formTitle">Create a News Story</h2>
-
-      <form id="storyForm">
-        <input type="hidden" id="storyId">
-
-        <label for="title">Headline *</label>
-        <input id="title" required maxlength="180" placeholder="Write news headline">
-
-        <label for="summary">Short Summary *</label>
-        <textarea id="summary" required maxlength="500" style="min-height:85px" placeholder="Write a short summary"></textarea>
-
-        <label for="body">Full News Content *</label>
-        <textarea id="body" required placeholder="Write full news content"></textarea>
-
-        <div class="row">
-          <div>
-            <label for="sec">Category *</label>
-            <select id="sec" required>
-              <option value="Bangladesh">Bangladesh</option>
-              <option value="Politics">Politics</option>
-              <option value="World">World</option>
-              <option value="Business">Business</option>
-              <option value="Sports">Sports</option>
-              <option value="Technology">Technology</option>
-              <option value="Education">Education</option>
-              <option value="Culture">Culture</option>
-              <option value="Opinion">Opinion</option>
-              <option value="Environment">Environment</option>
-              <option value="Long Read">Long Read</option>
-              <option value="Fact-Check">Fact-Check</option>
-            </select>
-          </div>
-          <div>
-            <label for="author">Author / Reporter</label>
-            <input id="author" placeholder="Marginal News Desk">
-          </div>
-        </div>
-
-        <label for="image">News Image URL</label>
-        <input id="image" type="url" placeholder="https://example.com/image.jpg">
-
-        <div class="row">
-          <div>
-            <label for="status">Publication Status</label>
-            <select id="status">
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </div>
-          <div>
-            <label for="publishAt">Schedule Publication (optional)</label>
-            <input id="publishAt" type="datetime-local">
-          </div>
-        </div>
-
-        <label><input id="featured" type="checkbox"> Feature on Homepage</label>
-        <label><input id="editorsPick" type="checkbox"> Mark as Editor's Pick</label>
-
-        <div class="actions">
-          <button type="submit" id="saveBtn">Save Story</button>
-          <button type="button" class="secondary" id="resetBtn">Clear Form</button>
-        </div>
-        <p id="message" role="status"></p>
-      </form>
-    </div>
-
-    <div class="panel">
-      <h2>Newsroom Stories</h2>
-      <div class="actions">
-        <button class="secondary" id="refresh">Refresh Stories</button>
-      </div>
-      <div id="storiesList" class="meta">Loading stories...</div>
-    </div>
-
-  </section>
-</main>
-
-<script>
-const $ = id => document.getElementById(id);
-let adminPassword = "";
-let stories = [];
-
-const oldCategories = {
-  intl:"World",
-  geo:"Politics",
-  eco:"Business",
-  sci:"Technology",
-  env:"Environment",
-  edu:"Education",
-  fact:"Fact-Check",
-  read:"Long Read",
-  op:"Opinion"
-};
-
-function headers(){
-  return {
-    "Content-Type":"application/json",
-    "x-admin-password":adminPassword
-  };
+<div class="breaking" id="breakingBar">
+  <div class="wrap ticker">
+    <b>BREAKING</b>
+    <span id="breakingText"></span>
+  </div>
+</div>
+@media(max-width:850px) {
+  .map { width:130px; }
+  .content { grid-template-columns:1fr; }
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .hero-grid { grid-template-columns:1fr; }
+  .side { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 
-async function api(url,options={}){
-  const response = await fetch(url,{
-    ...options,
-    headers:{...headers(),...(options.headers||{})}
-  });
-
-  if(response.status===401){
-    logout();
-    throw new Error("Session expired or incorrect password. Please sign in again.");
-  }
-
-  return response;
+@media(max-width:600px) {
+  .wrap { width:calc(100% - 22px); }
+  .top { font-size:9px; }
+  .mast { min-height:78px; }
+  .brand img { width:48px;height:48px; }
+  .brand strong { font-size:25px; }
+  .tag { font-size:7px;letter-spacing:1px; }
+  .map { display:none; }
+  .ib { width:34px;height:34px;font-size:16px; }
+  nav a { padding:11px 10px;font-size:12px; }
+  .lead { min-height:330px; }
+  .lead-copy { padding:17px; }
+  .lead h1 { font-size:30px; }
+  .side { grid-template-columns:1fr; }
+  .highlights { grid-template-columns:1fr; }
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr));gap:9px; }
+  .card h3 { font-size:14px; }
+  .cardbody { padding:8px; }
+  .quick { grid-template-columns:repeat(2,1fr); }
+  .head h2 { font-size:21px; }
 }
 
-function showDashboard(){
-  $("login").classList.add("hidden");
-  $("dashboard").classList.remove("hidden");
-  $("headerActions").classList.remove("hidden");
+@media(max-width:360px) {
+  .brand strong { font-size:21px; }
+  .grid { grid-template-columns:1fr; }
 }
 
-function showLogin(){
-  $("login").classList.remove("hidden");
-  $("dashboard").classList.add("hidden");
-  $("headerActions").classList.add("hidden");
+footer {
+  background:#080808;
+  color:#eee;
+  margin-top:30px;
+  padding:35px 0 15px;
 }
 
-async function login(){
-  const password=$("password").value.trim();
-
-  if(!password){
-    $("loginMessage").textContent="Please enter your password.";
-    return;
-  }
-
-  adminPassword=password;
-  $("loginBtn").disabled=true;
-  $("loginMessage").textContent="Checking password...";
-
-  try{
-    const response=await fetch("/api/stories",{
-      headers:headers()
-    });
-
-    if(!response.ok){
-      throw new Error(response.status===401?"Incorrect password.":"Server connection failed.");
-    }
-
-    stories=await response.json();
-    showDashboard();
-    renderStories();
-  }catch(error){
-    adminPassword="";
-    $("loginMessage").textContent=error.message;
-  }finally{
-    $("loginBtn").disabled=false;
-  }
+.footergrid {
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:25px;
 }
 
-function updateStats(){
-  const now=Date.now();
-
-  $("totalStories").textContent=stories.length;
-  $("publishedStories").textContent=stories.filter(s=>
-    s.status==="published" && (!s.publishAt || new Date(s.publishAt).getTime()<=now)
-  ).length;
-  $("draftStories").textContent=stories.filter(s=>s.status==="draft").length;
-  $("scheduledStories").textContent=stories.filter(s=>
-    s.status==="published" && s.publishAt && new Date(s.publishAt).getTime()>now
-  ).length;
+footer h3 {
+  font:800 19px var(--cond);
+  color:white;
 }
 
-function escapeHTML(value){
-  return String(value??"").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[c]);
+footer p, footer a {
+  color:#aaa;
+  font-size:12px;
 }
 
-function renderStories(){
-  updateStats();
+footer a { display:block;margin:8px 0; }
 
-  if(!stories.length){
-    $("storiesList").textContent="No stories yet. Create your first story.";
-    return;
-  }
+.copyright {
+  border-top:1px solid #333;
+  margin-top:25px;
+  padding-top:15px;
+  text-align:center;
+  color:#888;
+  font-size:11px;
+}
 
-  $("storiesList").innerHTML=stories.map(story=>`
-    <div class="story">
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:#000e;
+  overflow:auto;
+  padding:20px;
+}
+
+.modal.show { display:block; }
+
+.modalbox {
+  max-width:800px;
+  margin:30px auto;
+  background:var(--bg);
+  color:var(--ink);
+  padding:22px;
+  border:1px solid var(--line);
+  position:relative;
+}
+
+.modalbox img {
+  width:100%;
+  max-height:420px;
+  object-fit:cover;
+}
+
+.modalbox h2 {
+  font:800 30px/1.2 var(--serif);
+}
+
+.modaltext {
+  white-space:pre-line;
+  line-height:1.8;
+}
+
+.closemodal {
+  position:absolute;
+  right:12px;
+  top:10px;
+  background:var(--red);
+  color:white;
+  border:0;
+  padding:8px 13px;
+}
+
+@media(max-width:600px) {
+  .footergrid { grid-template-columns:1fr; }
+  .modalbox { padding:15px; }
+  .modalbox h2 { font-size:23px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <span id="todayDate">Marginal News</span>
+    <span>
+      <a href="https://www.facebook.com/marginalnews" target="_blank" rel="noopener">Facebook</a>
+      <a href="/admin/">Admin</a>
+    </span>
+  </div>
+</div>
+
+<header>
+  <div class="wrap mast">
+    <a class="brand" href="/">
+      <img
+        src="/marginal-news-logo-original.png"
+        alt="Marginal News Logo"
+        onerror="this.onerror=null;this.src='/icon-192.png';"
+      >
       <div>
-        <h3>${escapeHTML(story.title)}</h3>
-        <div class="meta">
-          ${escapeHTML(story.category||oldCategories[story.sec]||story.sec||"News")}
-          · ${escapeHTML(story.status||"draft")}
-          · ${escapeHTML(story.author||"Marginal News Desk")}
-        </div>
+        <strong><span>MARGINAL</span> NEWS</strong>
+        <div class="tag">Voices Beyond the Headlines</div>
       </div>
-      <div class="actions">
-        <button class="secondary" data-edit="${escapeHTML(story.id)}">Edit</button>
-        <button class="danger" data-delete="${escapeHTML(story.id)}">Delete</button>
-      </div>
+    </a>
+
+    <svg class="map" viewBox="0 0 500 210" role="img" aria-label="World map illustration">
+      <g fill="#999" opacity=".75">
+        <path d="M36 55l25-18 37 4 17 17 36-7 24 19-13 22-33 3-15 23-30-7-13-24-27-7z"/>
+        <path d="M128 119l24 7 15 28-11 32-15 15-12-32-15-22z"/>
+        <path d="M205 48l29-17 35 8 19-12 35 9 22-7 33 17-5 17-33 4-16 19-37-8-20 18-25-7-17-20-28 1z"/>
+        <path d="M249 105l28-10 34 12 10 29-18 29-13 30-17-8-11-37-19-19z"/>
+        <path d="M347 122l27-13 34 9 26 22-15 18-31-3-19 15-25-18z"/>
+        <path d="M410 170l20-5 15 12-16 10-20-5z"/>
+        <path d="M180 30l12-8 13 7-8 12z"/>
+      </g>
+      <g fill="none" stroke="#777" stroke-width="1" stroke-dasharray="2 5">
+        <path d="M10 105H490M250 5V205"/>
+      </g>
+    </svg>
+
+    <div class="actions">
+      <button class="ib" id="searchBtn" aria-label="Search">⌕</button>
+      <button class="ib" id="themeBtn" aria-label="Change theme">◐</button>
+      <button class="ib" id="menuBtn" aria-label="Menu">☰</button>
     </div>
-  `).join("");
-}
+  </div>
 
-async function loadStories(){
-  $("storiesList").textContent="Loading stories...";
+  <div class="wrap" id="searchArea" hidden>
+    <input id="searchInput" type="search" placeholder="Search news..." style="width:100%;padding:12px;margin:0 0 12px;background:var(--panel);color:var(--ink);border:1px solid var(--line)">
+  </div>
 
-  try{
-    const response=await api("/api/stories");
-    if(!response.ok)throw new Error("Could not load stories.");
+  <nav class="wrap" id="mainNav">
+    <a href="#latest">Latest</a>
+    <a href="#bangladesh">Bangladesh</a>
+    <a href="#world">World</a>
+    <a href="#politics">Politics</a>
+    <a href="#business">Business</a>
+    <a href="#technology">Technology</a>
+    <a href="#education">Education</a>
+    <a href="#environment">Environment</a>
+    <a href="#opinion">Opinion</a>
+  </nav>
+</header>
 
-    stories=await response.json();
-    renderStories();
-  }catch(error){
-    $("storiesList").textContent=error.message;
-  }
-}
-
-function clearForm(){
-  $("storyForm").reset();
-  $("storyId").value="";
-  $("formTitle").textContent="Create a News Story";
-  $("saveBtn").textContent="Save Story";
-  $("message").textContent="";
-}
-
-function editStory(id){
-  const story=stories.find(item=>String(item.id)===String(id));
-  if(!story)return;
-
-  $("storyId").value=story.id;
-  $("title").value=story.title||"";
-  $("summary").value=story.summary||"";
-  $("body").value=story.body||"";
-
-  const category=story.category||oldCategories[story.sec]||story.sec||"Bangladesh";
-  $("sec").value=category;
-
-  if(!$("sec").value)$("sec").value="Bangladesh";
-
-  $("author").value=story.author||"";
-  $("image").value=story.image||"";
-  $("status").value=story.status||"draft";
-  $("featured").checked=!!story.featured;
-  $("editorsPick").checked=!!story.editorsPick;
-
-  if(story.publishAt){
-    const date=new Date(story.publishAt);
-    $("publishAt").value=new Date(
-      date.getTime()-date.getTimezoneOffset()*60000
-    ).toISOString().slice(0,16);
-  }else{
-    $("publishAt").value="";
-  }
-
-  $("formTitle").textContent="Edit News Story";
-  $("saveBtn").textContent="Update Story";
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-$("storyForm").addEventListener("submit",async event=>{
-  event.preventDefault();
-
-  const id=$("storyId").value;
-  const publishValue=$("publishAt").value;
-
-  const story={
-    id:id||undefined,
-    title:$("title").value.trim(),
-    summary:$("summary").value.trim(),
-    body:$("body").value.trim(),
-    sec:$("sec").value,
-    category:$("sec").value,
-    author:$("author").value.trim()||"Marginal News Desk",
-    image:$("image").value.trim(),
-    status:$("status").value,
-    featured:$("featured").checked,
-    editorsPick:$("editorsPick").checked,
-    publishAt:publishValue?new Date(publishValue).toISOString():""
-  };
-
-  $("saveBtn").disabled=true;
-  $("message").textContent="Saving story...";
-
-  try{
-    const response=await api("/api/stories",{
-      method:id?"PUT":"POST",
-      body:JSON.stringify(story)
-    });
-
-    const result=await response.json();
-    if(!response.ok)throw new Error(result.error||"Could not save story.");
-
-    $("message").textContent="Story saved successfully.";
-    clearForm();
-    await loadStories();
-  }catch(error){
-    $("message").textContent=error.message;
-  }finally{
-    $("saveBtn").disabled=false;
-  }
-});
-
-$("storiesList").addEventListener("click",async event=>{
-  const edit=event.target.closest("[data-edit]");
-  const remove=event.target.closest("[data-delete]");
-
-  if(edit){
-    editStory(edit.dataset.edit);
-    return;
-  }
-
-  if(remove){
-    const id=remove.dataset.delete;
-    if(!confirm("Are you sure you want to delete this story?"))return;
-
-    try{
-      const response=await api("/api/stories",{
-        method:"DELETE",
-        body:JSON.stringify({id})
-      });
-
-      const result=await response.json();
-      if(!response.ok)throw new Error(result.error||"Delete failed.");
-
-      await loadStories();
-    }catch(error){
-      alert(error.message);
-    }
-  }
-});
-
-async function downloadSubscribers(){
-  try{
-    const response=await api("/api/subscribe");
-    if(!response.ok)throw new Error("Could not download subscribers.");
-
-    const blob=await response.blob();
-    const url=URL.createObjectURL(blob);
-    const link=document.createElement("a");
-    link.href=url;
-    link.download="marginal-news-subscribers.csv";
-    link.click();
-    URL.revokeObjectURL(url);
-  }catch(error){
-    alert(error.message);
-  }
-}
-
-function logout(){
-  adminPassword="";
-  $("password").value="";
-  $("loginMessage").textContent="";
-  clearForm();
-  showLogin();
-}
-
-$("loginBtn").addEventListener("click",login);
-$("password").addEventListener("keydown",event=>{
-  if(event.key==="Enter")login();
-});
-$("logout").addEventListener("click",logout);
-$("download").addEventListener("click",downloadSubscribers);
-$("refresh").addEventListener("click",loadStories);
-$("resetBtn").addEventListener("click",clearForm);
-</script>
-</body>
-</html>
+<div class="breaking" id="breakingBar">
+  <div class="wrap ticker">
+    <b>BREAKING</b>
+    <span id="breakingText"></span>
+  </div>
+</div>
