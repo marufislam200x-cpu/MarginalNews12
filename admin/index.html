@@ -4,33 +4,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Marginal News | Newsroom Admin</title>
+<title>Marginal News | Admin Dashboard</title>
 <style>
-:root{--red:#c4161c;--ink:#202020;--muted:#666;--line:#ddd}
+:root{--red:#c4161c;--dark:#171717;--bg:#f4f4f4;--line:#ddd}
 *{box-sizing:border-box}
-body{margin:0;background:#f3f3f3;color:var(--ink);font:15px Arial,sans-serif}
-header{background:#171717;color:white;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+body{margin:0;background:var(--bg);color:#222;font:15px Arial,sans-serif}
+header{background:var(--dark);color:white;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 header strong{font-size:22px}
-header span{color:#ddd;font-size:13px}
-main{max-width:1050px;margin:30px auto;padding:0 16px}
-.panel{background:white;border:1px solid var(--line);border-radius:9px;padding:22px;margin-bottom:20px}
-h2{margin:0 0 18px}
+main{max-width:1100px;margin:28px auto;padding:0 15px}
+.panel{background:white;border:1px solid var(--line);border-radius:10px;padding:22px;margin-bottom:20px}
+h2{margin-top:0}
 label{display:block;font-weight:bold;margin:14px 0 6px}
 input,textarea,select{width:100%;padding:11px;border:1px solid #bbb;border-radius:5px;font:inherit}
-textarea{min-height:180px;resize:vertical}
+textarea{min-height:150px;resize:vertical}
+input[type=checkbox]{width:auto}
 button{border:0;border-radius:5px;padding:11px 16px;background:var(--red);color:white;font-weight:bold;cursor:pointer}
 button.secondary{background:#333}
 button.danger{background:#777}
-button:disabled{opacity:.5;cursor:wait}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+button:disabled{opacity:.5}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.story{border-top:1px solid var(--line);padding:15px 0;display:flex;justify-content:space-between;gap:15px;align-items:center}
-.story h3{margin:0 0 6px}
-.meta{color:var(--muted);font-size:13px}
-#message{margin-top:12px;color:#176b36}
-#login{max-width:420px;margin:70px auto}
+.story{border-top:1px solid var(--line);padding:16px 0;display:flex;justify-content:space-between;gap:15px;align-items:center}
+.story h3{margin:0 0 7px}
+.meta{color:#777;font-size:13px}
 .hidden{display:none!important}
-@media(max-width:650px){.row{grid-template-columns:1fr}.story{align-items:flex-start;flex-direction:column}}
+#login{max-width:430px;margin:65px auto}
+#loginMessage,#message{margin-top:12px;color:#b21b20}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:white;border:1px solid var(--line);padding:16px;border-radius:8px}
+.stat strong{display:block;font-size:25px;color:var(--red);margin-top:7px}
+@media(max-width:650px){.row,.stats{grid-template-columns:1fr 1fr}.story{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
@@ -40,7 +43,7 @@ button:disabled{opacity:.5;cursor:wait}
     <strong>MARGINAL NEWS</strong><br>
     <span>Newsroom Management System</span>
   </div>
-  <div id="headerActions" class="hidden">
+  <div id="headerActions" class="hidden actions">
     <button class="secondary" id="download">Download Subscribers</button>
     <button class="secondary" id="logout">Log out</button>
   </div>
@@ -49,16 +52,24 @@ button:disabled{opacity:.5;cursor:wait}
 <main>
   <section id="login" class="panel">
     <h2>Admin Login</h2>
-    <p class="meta">Enter your newsroom administrator password.</p>
+    <p class="meta">Sign in to manage Marginal News.</p>
     <label for="password">Admin Password</label>
-    <input id="password" type="password" placeholder="Enter password">
+    <input id="password" type="password" placeholder="Enter admin password">
     <div class="actions">
       <button id="loginBtn">Sign in</button>
     </div>
-    <p id="loginMessage" class="meta"></p>
+    <p id="loginMessage" aria-live="polite"></p>
   </section>
 
   <section id="dashboard" class="hidden">
+
+    <div class="stats">
+      <div class="stat">Total Stories<strong id="totalStories">0</strong></div>
+      <div class="stat">Published<strong id="publishedStories">0</strong></div>
+      <div class="stat">Drafts<strong id="draftStories">0</strong></div>
+      <div class="stat">Scheduled<strong id="scheduledStories">0</strong></div>
+    </div>
+
     <div class="panel">
       <h2 id="formTitle">Create a News Story</h2>
 
@@ -66,27 +77,30 @@ button:disabled{opacity:.5;cursor:wait}
         <input type="hidden" id="storyId">
 
         <label for="title">Headline *</label>
-        <input id="title" required maxlength="180" placeholder="Write the news headline">
+        <input id="title" required maxlength="180" placeholder="Write news headline">
 
         <label for="summary">Short Summary *</label>
-        <textarea id="summary" required maxlength="500" style="min-height:85px" placeholder="Write a short introduction"></textarea>
+        <textarea id="summary" required maxlength="500" style="min-height:85px" placeholder="Write a short summary"></textarea>
 
         <label for="body">Full News Content *</label>
-        <textarea id="body" required placeholder="Write the full news report"></textarea>
+        <textarea id="body" required placeholder="Write full news content"></textarea>
 
         <div class="row">
           <div>
             <label for="sec">Category *</label>
             <select id="sec" required>
-              <option value="intl">International News</option>
-              <option value="geo">Geopolitics</option>
-              <option value="eco">Global Economy</option>
-              <option value="sci">Science & Technology</option>
-              <option value="env">Climate & Environment</option>
-              <option value="edu">Education</option>
-              <option value="fact">Fact-Check</option>
-              <option value="read">Long Read</option>
-              <option value="op">Opinion</option>
+              <option value="Bangladesh">Bangladesh</option>
+              <option value="Politics">Politics</option>
+              <option value="World">World</option>
+              <option value="Business">Business</option>
+              <option value="Sports">Sports</option>
+              <option value="Technology">Technology</option>
+              <option value="Education">Education</option>
+              <option value="Culture">Culture</option>
+              <option value="Opinion">Opinion</option>
+              <option value="Environment">Environment</option>
+              <option value="Long Read">Long Read</option>
+              <option value="Fact-Check">Fact-Check</option>
             </select>
           </div>
           <div>
@@ -94,6 +108,9 @@ button:disabled{opacity:.5;cursor:wait}
             <input id="author" placeholder="Marginal News Desk">
           </div>
         </div>
+
+        <label for="image">News Image URL</label>
+        <input id="image" type="url" placeholder="https://example.com/image.jpg">
 
         <div class="row">
           <div>
@@ -104,15 +121,13 @@ button:disabled{opacity:.5;cursor:wait}
             </select>
           </div>
           <div>
-            <label for="publishAt">Schedule (optional)</label>
+            <label for="publishAt">Schedule Publication (optional)</label>
             <input id="publishAt" type="datetime-local">
           </div>
         </div>
 
-        <label>
-          <input id="featured" type="checkbox" style="width:auto">
-          Feature this story on the homepage
-        </label>
+        <label><input id="featured" type="checkbox"> Feature on Homepage</label>
+        <label><input id="editorsPick" type="checkbox"> Mark as Editor's Pick</label>
 
         <div class="actions">
           <button type="submit" id="saveBtn">Save Story</button>
@@ -129,6 +144,7 @@ button:disabled{opacity:.5;cursor:wait}
       </div>
       <div id="storiesList" class="meta">Loading stories...</div>
     </div>
+
   </section>
 </main>
 
@@ -137,129 +153,118 @@ const $ = id => document.getElementById(id);
 let adminPassword = "";
 let stories = [];
 
-function apiHeaders() {
+const oldCategories = {
+  intl:"World",
+  geo:"Politics",
+  eco:"Business",
+  sci:"Technology",
+  env:"Environment",
+  edu:"Education",
+  fact:"Fact-Check",
+  read:"Long Read",
+  op:"Opinion"
+};
+
+function headers(){
   return {
-    "Content-Type": "application/json",
-    "x-admin-password": adminPassword
+    "Content-Type":"application/json",
+    "x-admin-password":adminPassword
   };
 }
 
-function showLogin() {
-  $("login").classList.remove("hidden");
-  $("dashboard").classList.add("hidden");
-  $("headerActions").classList.add("hidden");
+async function api(url,options={}){
+  const response = await fetch(url,{
+    ...options,
+    headers:{...headers(),...(options.headers||{})}
+  });
+
+  if(response.status===401){
+    logout();
+    throw new Error("Session expired or incorrect password. Please sign in again.");
+  }
+
+  return response;
 }
 
-function showDashboard() {
+function showDashboard(){
   $("login").classList.add("hidden");
   $("dashboard").classList.remove("hidden");
   $("headerActions").classList.remove("hidden");
 }
 
-async function login() {
-  const password = $("password").value;
-  if (!password) {
-    $("loginMessage").textContent = "Enter your password.";
+function showLogin(){
+  $("login").classList.remove("hidden");
+  $("dashboard").classList.add("hidden");
+  $("headerActions").classList.add("hidden");
+}
+
+async function login(){
+  const password=$("password").value.trim();
+
+  if(!password){
+    $("loginMessage").textContent="Please enter your password.";
     return;
   }
 
-  adminPassword = password;
-  $("loginBtn").disabled = true;
-  $("loginMessage").textContent = "Checking password...";
+  adminPassword=password;
+  $("loginBtn").disabled=true;
+  $("loginMessage").textContent="Checking password...";
 
-  try {
-    const response = await fetch("/api/stories", {
-      headers: apiHeaders()
+  try{
+    const response=await fetch("/api/stories",{
+      headers:headers()
     });
 
-    if (response.status === 401) {
-      throw new Error("Incorrect password.");
-    }
-    if (!response.ok) {
-      throw new Error("Could not connect to the news server.");
+    if(!response.ok){
+      throw new Error(response.status===401?"Incorrect password.":"Server connection failed.");
     }
 
-    stories = await response.json();
+    stories=await response.json();
     showDashboard();
     renderStories();
-  } catch (error) {
-    adminPassword = "";
-    $("loginMessage").textContent = error.message;
-  } finally {
-    $("loginBtn").disabled = false;
+  }catch(error){
+    adminPassword="";
+    $("loginMessage").textContent=error.message;
+  }finally{
+    $("loginBtn").disabled=false;
   }
 }
 
-function clearForm() {
-  $("storyForm").reset();
-  $("storyId").value = "";
-  $("formTitle").textContent = "Create a News Story";
-  $("saveBtn").textContent = "Save Story";
-  $("message").textContent = "";
+function updateStats(){
+  const now=Date.now();
+
+  $("totalStories").textContent=stories.length;
+  $("publishedStories").textContent=stories.filter(s=>
+    s.status==="published" && (!s.publishAt || new Date(s.publishAt).getTime()<=now)
+  ).length;
+  $("draftStories").textContent=stories.filter(s=>s.status==="draft").length;
+  $("scheduledStories").textContent=stories.filter(s=>
+    s.status==="published" && s.publishAt && new Date(s.publishAt).getTime()>now
+  ).length;
 }
 
-function editStory(id) {
-  const story = stories.find(item => item.id === id);
-  if (!story) return;
-
-  $("storyId").value = story.id;
-  $("title").value = story.title || "";
-  $("summary").value = story.summary || "";
-  $("body").value = story.body || "";
-  $("sec").value = story.sec || "intl";
-  $("author").value = story.author || "";
-  $("status").value = story.status || "draft";
-  $("featured").checked = !!story.featured;
-
-  if (story.publishAt) {
-    const date = new Date(story.publishAt);
-    $("publishAt").value =
-      new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-      .toISOString().slice(0, 16);
-  } else {
-    $("publishAt").value = "";
-  }
-
-  $("formTitle").textContent = "Edit News Story";
-  $("saveBtn").textContent = "Update Story";
-  window.scrollTo({ top: 0, behavior: "smooth" });
+function escapeHTML(value){
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
 }
 
-async function loadStories() {
-  $("storiesList").textContent = "Loading stories...";
+function renderStories(){
+  updateStats();
 
-  try {
-    const response = await fetch("/api/stories", {
-      headers: apiHeaders()
-    });
-
-    if (response.status === 401) {
-      logout();
-      throw new Error("Please sign in again.");
-    }
-    if (!response.ok) throw new Error("Could not load stories.");
-
-    stories = await response.json();
-    renderStories();
-  } catch (error) {
-    $("storiesList").textContent = error.message;
-  }
-}
-
-function renderStories() {
-  if (!stories.length) {
-    $("storiesList").textContent = "No stories yet. Create your first story above.";
+  if(!stories.length){
+    $("storiesList").textContent="No stories yet. Create your first story.";
     return;
   }
 
-  $("storiesList").innerHTML = stories.map(story => `
+  $("storiesList").innerHTML=stories.map(story=>`
     <div class="story">
       <div>
         <h3>${escapeHTML(story.title)}</h3>
         <div class="meta">
-          ${escapeHTML(story.sec || "News")} ·
-          ${escapeHTML(story.status || "draft")} ·
-          ${escapeHTML(story.author || "Marginal News Desk")}
+          ${escapeHTML(story.category||oldCategories[story.sec]||story.sec||"News")}
+          · ${escapeHTML(story.status||"draft")}
+          · ${escapeHTML(story.author||"Marginal News Desk")}
         </div>
       </div>
       <div class="actions">
@@ -270,122 +275,167 @@ function renderStories() {
   `).join("");
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
+async function loadStories(){
+  $("storiesList").textContent="Loading stories...";
+
+  try{
+    const response=await api("/api/stories");
+    if(!response.ok)throw new Error("Could not load stories.");
+
+    stories=await response.json();
+    renderStories();
+  }catch(error){
+    $("storiesList").textContent=error.message;
+  }
 }
 
-$("storyForm").addEventListener("submit", async event => {
+function clearForm(){
+  $("storyForm").reset();
+  $("storyId").value="";
+  $("formTitle").textContent="Create a News Story";
+  $("saveBtn").textContent="Save Story";
+  $("message").textContent="";
+}
+
+function editStory(id){
+  const story=stories.find(item=>String(item.id)===String(id));
+  if(!story)return;
+
+  $("storyId").value=story.id;
+  $("title").value=story.title||"";
+  $("summary").value=story.summary||"";
+  $("body").value=story.body||"";
+
+  const category=story.category||oldCategories[story.sec]||story.sec||"Bangladesh";
+  $("sec").value=category;
+
+  if(!$("sec").value)$("sec").value="Bangladesh";
+
+  $("author").value=story.author||"";
+  $("image").value=story.image||"";
+  $("status").value=story.status||"draft";
+  $("featured").checked=!!story.featured;
+  $("editorsPick").checked=!!story.editorsPick;
+
+  if(story.publishAt){
+    const date=new Date(story.publishAt);
+    $("publishAt").value=new Date(
+      date.getTime()-date.getTimezoneOffset()*60000
+    ).toISOString().slice(0,16);
+  }else{
+    $("publishAt").value="";
+  }
+
+  $("formTitle").textContent="Edit News Story";
+  $("saveBtn").textContent="Update Story";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+$("storyForm").addEventListener("submit",async event=>{
   event.preventDefault();
 
-  const id = $("storyId").value;
-  const publishValue = $("publishAt").value;
+  const id=$("storyId").value;
+  const publishValue=$("publishAt").value;
 
-  const story = {
-    id: id || undefined,
-    title: $("title").value.trim(),
-    summary: $("summary").value.trim(),
-    body: $("body").value.trim(),
-    sec: $("sec").value,
-    author: $("author").value.trim() || "Marginal News Desk",
-    status: $("status").value,
-    featured: $("featured").checked,
-    publishAt: publishValue ? new Date(publishValue).toISOString() : ""
+  const story={
+    id:id||undefined,
+    title:$("title").value.trim(),
+    summary:$("summary").value.trim(),
+    body:$("body").value.trim(),
+    sec:$("sec").value,
+    category:$("sec").value,
+    author:$("author").value.trim()||"Marginal News Desk",
+    image:$("image").value.trim(),
+    status:$("status").value,
+    featured:$("featured").checked,
+    editorsPick:$("editorsPick").checked,
+    publishAt:publishValue?new Date(publishValue).toISOString():""
   };
 
-  $("saveBtn").disabled = true;
-  $("message").textContent = "Saving story...";
+  $("saveBtn").disabled=true;
+  $("message").textContent="Saving story...";
 
-  try {
-    const response = await fetch("/api/stories", {
-      method: id ? "PUT" : "POST",
-      headers: apiHeaders(),
-      body: JSON.stringify(story)
+  try{
+    const response=await api("/api/stories",{
+      method:id?"PUT":"POST",
+      body:JSON.stringify(story)
     });
 
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "Could not save story.");
+    const result=await response.json();
+    if(!response.ok)throw new Error(result.error||"Could not save story.");
 
-    $("message").textContent = "Story saved successfully.";
+    $("message").textContent="Story saved successfully.";
     clearForm();
     await loadStories();
-  } catch (error) {
-    $("message").textContent = error.message;
-  } finally {
-    $("saveBtn").disabled = false;
+  }catch(error){
+    $("message").textContent=error.message;
+  }finally{
+    $("saveBtn").disabled=false;
   }
 });
 
-$("storiesList").addEventListener("click", async event => {
-  const editButton = event.target.closest("[data-edit]");
-  const deleteButton = event.target.closest("[data-delete]");
+$("storiesList").addEventListener("click",async event=>{
+  const edit=event.target.closest("[data-edit]");
+  const remove=event.target.closest("[data-delete]");
 
-  if (editButton) {
-    editStory(editButton.dataset.edit);
+  if(edit){
+    editStory(edit.dataset.edit);
+    return;
   }
 
-  if (deleteButton) {
-    const id = deleteButton.dataset.delete;
-    if (!confirm("Are you sure you want to delete this story?")) return;
+  if(remove){
+    const id=remove.dataset.delete;
+    if(!confirm("Are you sure you want to delete this story?"))return;
 
-    try {
-      const response = await fetch("/api/stories", {
-        method: "DELETE",
-        headers: apiHeaders(),
-        body: JSON.stringify({ id })
+    try{
+      const response=await api("/api/stories",{
+        method:"DELETE",
+        body:JSON.stringify({id})
       });
 
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Delete failed.");
+      const result=await response.json();
+      if(!response.ok)throw new Error(result.error||"Delete failed.");
 
       await loadStories();
-    } catch (error) {
+    }catch(error){
       alert(error.message);
     }
   }
 });
 
-async function downloadSubscribers() {
-  try {
-    const response = await fetch("/api/subscribe", {
-      headers: apiHeaders()
-    });
+async function downloadSubscribers(){
+  try{
+    const response=await api("/api/subscribe");
+    if(!response.ok)throw new Error("Could not download subscribers.");
 
-    if (!response.ok) throw new Error("Could not download subscriber list.");
-
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "marginal-news-subscribers.csv";
+    const blob=await response.blob();
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement("a");
+    link.href=url;
+    link.download="marginal-news-subscribers.csv";
     link.click();
     URL.revokeObjectURL(url);
-  } catch (error) {
+  }catch(error){
     alert(error.message);
   }
 }
 
-function logout() {
-  adminPassword = "";
-  $("password").value = "";
-  $("loginMessage").textContent = "";
+function logout(){
+  adminPassword="";
+  $("password").value="";
+  $("loginMessage").textContent="";
   clearForm();
   showLogin();
 }
 
-$("loginBtn").addEventListener("click", login);
-$("password").addEventListener("keydown", event => {
-  if (event.key === "Enter") login();
+$("loginBtn").addEventListener("click",login);
+$("password").addEventListener("keydown",event=>{
+  if(event.key==="Enter")login();
 });
-$("logout").addEventListener("click", logout);
-$("download").addEventListener("click", downloadSubscribers);
-$("refresh").addEventListener("click", loadStories);
-$("resetBtn").addEventListener("click", clearForm);
+$("logout").addEventListener("click",logout);
+$("download").addEventListener("click",downloadSubscribers);
+$("refresh").addEventListener("click",loadStories);
+$("resetBtn").addEventListener("click",clearForm);
 </script>
 </body>
 </html>
